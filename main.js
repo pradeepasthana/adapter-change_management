@@ -116,9 +116,14 @@ healthcheck(callback) {
       * for the callback's errorMessage parameter.
       */
 
-        this.emitStatus('OFFLINE');
-        log.error(`ServiceNow: Instance is unavailable.`);
-        callback(null, error);
+        this.emitOffline();
+        log.error(`Adapter ${this.id} is OFFLINE`);
+        log.error(`Adapter ${this.id} healthcheck failed with error: ${error}`);
+        if(callback)
+          return callback(null, error);
+        else
+          return;
+
 
    } else {
      /**
@@ -132,10 +137,12 @@ healthcheck(callback) {
       * responseData parameter.
       */
 
-        this.emitStatus('ONLINE');
-        log.info('ServiceNow: Instance is available latest.');
-        callback(result, null);       
-
+        this.emitOnline();
+        log.info(`Adapter ${this.id} is ONLINE`);
+        if(callback)
+          return callback(result);
+        else
+          return;
    }
  });
 }
